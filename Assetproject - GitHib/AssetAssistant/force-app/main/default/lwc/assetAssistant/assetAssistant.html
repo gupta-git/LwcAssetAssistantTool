@@ -1,0 +1,238 @@
+<template>
+    <div class="slds-m-around_medium"> 
+      
+      <div class="slds-m-bottom_small ">
+          <lightning-input type="text"
+             value={searchValue}
+             onchange={searchKeyword}
+             onpicklistchanged={picklistChanged} 
+             ></lightning-input>
+   
+            
+       </div>
+       
+       <lightning-button label="Search"
+          onclick={handleSearchKeyword}
+          variant="brand"></lightning-button>
+
+          <lightning-datatable
+          key-field="Id"
+          data={contactsRecord}
+          columns={columns}
+          onrowaction={handleRowActions}
+          hide-checkbox-column>
+       </lightning-datatable>
+       <br /><br />12:02
+       <template if:true={isModalOpen}>
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                  <div class="slds-modal__container">
+                                 
+                                      <header class="slds-modal__header">
+                                          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                                              <lightning-icon icon-name="utility:close"
+                                                  alternative-text="close"
+                                                  variant="inverse"
+                                                  size="small" ></lightning-icon>
+                                              <span class="slds-assistive-text">Close</span>
+                                          </button>
+                                          <h2 class="slds-text-heading_medium slds-hyphenate">Add an Asset</h2>
+                                      </header>
+                                   
+                                      <div class="slds-modal__content slds-p-around_medium" >
+                                       <lightning-input type="String"  data-name="input1" label="Enter an ID to Add Asset " ></lightning-input>
+                                          
+                                      </div>
+                                 
+                                      <footer class="slds-modal__footer">
+                                          <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                                          <button class="slds-button slds-button_brand" onclick={addDealer} title="OK">OK</button>
+                                      </footer>
+                                  </div>
+                              </section>
+                              <div class="slds-backdrop slds-backdrop_open"></div>
+                          </template>
+      
+         <template if:true={isModalTransferOpen}>
+         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                              <div class="slds-modal__container">
+                              
+                                    <header class="slds-modal__header">
+                                       <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeTransferModal}>
+                                          <lightning-icon icon-name="utility:close"
+                                                alternative-text="close"
+                                                variant="inverse"
+                                                size="small" ></lightning-icon>
+                                          <span class="slds-assistive-text">Close</span>
+                                       </button>
+                                       <h2 class="slds-text-heading_medium slds-hyphenate">Transfer Asset</h2>
+                                    </header>
+                                 
+                                    <div class="slds-modal__content slds-p-around_medium" >
+                                    <div class="slds-text-color_destructive">IR Sales Support: Credit and Rebill process will not automatically occur in TCF or COM</div>
+                                    <lightning-input type="String"  data-name="input2" label="Enter an ID to Transfer" ></lightning-input>
+                                    
+                                    </div>
+                              
+                                    <footer class="slds-modal__footer">
+                                       <button class="slds-button slds-button_neutral" onclick={closeTransferModal} title="Cancel">Cancel</button>
+                                       <button class="slds-button slds-button_brand" onclick={transferDealer} title="OK">OK</button>
+                                    </footer>
+                              </div>
+                           </section>
+                           <div class="slds-backdrop slds-backdrop_open"></div>
+                        </template>
+          
+       <!--
+       <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_small">
+          <thead>
+             <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                   <div class="slds-truncate" title="Serial Number">Serial Number</div>
+                </th>
+                <th class="" scope="col">
+                   <div class="slds-truncate" title="Factory Number">Factory Number</div>
+                </th>
+                <th class="" scope="col">
+                   <div class="slds-truncate" title="Model Number">Model Number</div>
+                </th>
+                <th class="" scope="col">
+                   <div class="slds-truncate" title="First Name">First Name</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Last Name">Last Name</div>
+                  </th>
+                  <th class="" scope="col">
+                     <div class="slds-truncate" title="Floor Plan Dealer">Floor Plan Dealer</div>
+                  </th>
+                  <th class="" scope="col">
+                     <div class="slds-truncate" title="Date Created">Date Created</div>
+                  </th>
+                  <th class="" scope="col">
+                     <div class="slds-truncate" title="Date Created">Sold Date</div>
+                  </th>
+                  <th class="" scope="col">
+                     <div class="slds-truncate" title="Status">Status</div>
+                  </th>
+                  <th class="" scope="col">
+                     <div class="slds-truncate" title="Actions">Actions</div>
+                  </th>
+             </tr>
+          </thead>
+          
+          <tbody>   
+             <template for:each={contactsRecord} for:item="con">
+                <tr class="slds-hint-parent" key={con.ID}>
+                   <td>
+                      
+                      <div class="slds-truncate">{con.SerialNumber}</div>
+                   </td>
+                   <td>
+                      <div class="slds-truncate">{con.Factory_Model_Number__c}</div>
+                   </td>
+                   <td>
+                     <div class="slds-truncate">{con.Model_Number__c}</div>
+                  </td>
+                  <td>
+                     <lightning-output-field field-name="Contact.FirstName">
+                     </lightning-output-field>
+                    <div class="slds-truncate">{con.Contact.FirstName}</div> 
+                  </td>
+                  <td>
+                     <lightning-output-field field-name="Contact.FirstName">
+                     </lightning-output-field>
+                   <div class="slds-truncate">{con.Contact.LastName}</div>
+                  </td>
+                  <td>
+                     <div class="slds-truncate">{con.Floorplan_Dealer_Account__c}</div>
+                  </td>
+                  <td>
+                   Do not display this image at the moment
+                     <div class="slds-truncate">{con.CreatedDate}</div>
+                     
+                     <div class="slds-truncate"><lightning-formatted-date-time value= {con.CreatedDate} year="2-digit" month="short" day="2-digit" hour="numeric"
+                        weekday="long" era="short"></lightning-formatted-date-time></div>
+                  </td>
+
+
+                  <td>
+                    
+                     
+                     <div class="slds-truncate">{con.Sold_Date__c}</div>
+                     
+                  </td>
+                  <td>
+                     <div class="slds-truncate">{con.Status}</div>
+                  </td>
+                  
+                  <td>
+                     <div>
+                           
+                           <lightning-button variant="brand"
+                           label="add Asset"
+                           onclick={openModal}
+                           style="display: grid; width: 100%">
+                           </lightning-button>
+                           
+                      
+                           
+                           <template if:true={isModalOpen}>
+                             
+                              <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                  <div class="slds-modal__container">
+                                 
+                                      <header class="slds-modal__header">
+                                          <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                                              <lightning-icon icon-name="utility:close"
+                                                  alternative-text="close"
+                                                  variant="inverse"
+                                                  size="small" ></lightning-icon>
+                                              <span class="slds-assistive-text">Close</span>
+                                          </button>
+                                          <h2 class="slds-text-heading_medium slds-hyphenate">Modal/PopUp Box header LWC</h2>
+                                      </header>
+                                   
+                                      <div class="slds-modal__content slds-p-around_medium" >
+                                       <lightning-input type="String"  data-name="input1" label="Enter an ID" ></lightning-input>
+                                          
+                                      </div>
+                                 
+                                      <footer class="slds-modal__footer">
+                                          <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                                          <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                                      </footer>
+                                  </div>
+                              </section>
+                              <div class="slds-backdrop slds-backdrop_open"></div>
+                          </template>
+
+                        <lightning-combobox
+                          name="Recent Action"
+                        
+                          value={value}
+                          placeholder="Recent Action"
+                          options={options}
+                          onchange={handleChange} ></lightning-combobox>
+
+                     </div>
+                     
+                   
+
+                  </td>
+                  
+                   <td>
+                      <div class="slds-truncate">
+                      </div>
+                   </td>
+                 
+                </tr>
+             </template>
+          </tbody>
+       </table> -->
+      <template if:true={isFooterOpen}>
+         <div class="slds-docked-form-footer">
+            <button type="button" class="slds-button slds-button_neutral" onclick={hadleFooterClose}>Cancel</button>
+            <button type="button" class="slds-button slds-button_brand" onclick={handleRemove}>Save</button>
+         </div>
+      </template>
+    </div>
+ </template>
